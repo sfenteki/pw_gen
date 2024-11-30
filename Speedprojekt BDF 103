@@ -47,6 +47,22 @@ def passwoert_loeschen(anbieter):
                 print(f"{key}:{value}")
                 file.write(f"{key}:{value}\n")
 
+def benutzeroberfläche():
+    print("Herzlich Willkommen zum Passwortgenerator.\n")
+    with open("master.txt", "r")as file:
+        for elemente in file:
+            if len(elemente) == 0:
+                vergabe_passwort = int(input("Bitte vergeben Sie sich ein Passwort")).encode("utf-8")
+            else:
+                with open("master.txt", "r")as file:
+                    for element in file:
+                        elementsauber= element.strip()
+                    passworteingabe = input("Geben Sie zunächst Ihr Passwort ein").encode("utf-8")
+                    if passworteingabe == elementsauber:
+                        print("Herzlich Willkommen")
+                        auswahl_manager= input("Pass")
+
+
 
 passwortspeichern()
 loeschen_anbieter = input("Lösche einen Anbieter!").lower()
