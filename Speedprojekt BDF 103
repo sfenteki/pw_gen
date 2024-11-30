@@ -1,10 +1,8 @@
-# pw_gen
+# Speedprojekt BDF 103
 Pw_generator
 
-import random
-import string
-
-
+import random # Importiert einen Zufallsgenerator-Bib
+import string # Importiert die String-Bib um ascii-letters, zahlen und interpunktion einfacher verwenden zu können.
 
 def generate(länge):
     passwort = string.ascii_letters + string.digits + string.punctuation
@@ -44,3 +42,7 @@ passwoert_loeschen(loeschen_anbieter)
 
 #eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?")
 #passwoerter_anzeigen(eingabe_anbieter)
+
+#Programmstart
+if __name__ == "__main__":
+     password_manager()
