@@ -1,13 +1,11 @@
 # Speedprojekt BDF 103
 Pw_generator
 
-import random # Importiert einen Zufallsgenerator-Bib
-import string # Importiert die String-Bib um ascii-letters, zahlen und interpunktion einfacher verwenden zu können.
+import random
+import string
 
 def generate(länge):
-    passwort = string.ascii_letters + string.digits + string.punctuation
-    ##Diese Zeile ist erforderlich, da sonst das generierte Passwort ab ":" nicht richtig im weiteren Verlauf zugeordnet wird.
-    passwort = passwort.replace(":", ";") 
+    passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":", ";")
     return ''.join(random.choice(passwort)for i in range(länge))
 
 def passwortspeichern():
@@ -19,30 +17,37 @@ def passwortspeichern():
         print(passwortliste)
         return passwortliste
 
-
 def passwoerter_anzeigen(anbieter):
     passwortliste3 = {}
     with open("pwd.txt" , "r")as file:
         for line in file:
             elemente = line.split(":")
             passwortliste3[elemente[0]] = elemente[1]
-        print(passwortliste3[anbieter])
-#####Muss noch bearbeitet werden######Klappt nicht
+        try:
+            print(passwortliste3[anbieter])
+        except:
+            print("Ein solches Passwort liegt nicht vor")
 def passwoert_loeschen(anbieter):
     passwortliste3 = {}
-    with open("pwd.txt", "a") as file:
+    with open("pwd.txt", "r") as file:
         for line in file:
-            elemente = line.split(":")
-            passwortliste3[elemente[0]] = elemente[1]
-        file.write(passwortliste3.pop(anbieter))
+            elemente = line.strip().split(":")
+            passwortliste3[elemente[0]] = elemente
 
-#passwortspeichern()
+        if anbieter in passwortliste3:
+            passwortliste3.pop(anbieter)
+            print(f"Passwort {anbieter} gelöscht")
+        else:
+            print("Du hast dieses Passwort nicht gespeichert")
+        with open("pwd.txt", "w") as file:
+            for key, value in passwortliste3.items():
+                print(f"{key}:{value}")
+                file.write(f"{key}:{value}\n")
+
+
+passwortspeichern()
 loeschen_anbieter = input("Lösche einen Anbieter!")
 passwoert_loeschen(loeschen_anbieter)
 
-#eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?")
-#passwoerter_anzeigen(eingabe_anbieter)
-
-#Programmstart
-if __name__ == "__main__":
-     password_manager()
+eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?")
+passwoerter_anzeigen(eingabe_anbieter)
