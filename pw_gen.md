@@ -8,7 +8,8 @@ import string
 
 def generate(länge):
     passwort = string.ascii_letters + string.digits + string.punctuation
-    passwort = passwort.replace(":", ";")
+    ##Diese Zeile ist erforderlich, da sonst das generierte Passwort ab ":" nicht richtig im weiteren Verlauf zugeordnet wird.
+    passwort = passwort.replace(":", ";") 
     return ''.join(random.choice(passwort)for i in range(länge))
 
 def passwortspeichern():
