@@ -5,7 +5,7 @@ import random
 import string
 
 def generate(länge):
-    passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":",";")
+    passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":", ";")
     return ''.join(random.choice(passwort)for i in range(länge))
 
 def passwortspeichern():
@@ -21,18 +21,21 @@ def passwoerter_anzeigen(anbieter):
     passwortliste3 = {}
     with open("pwd.txt" , "r")as file:
         for line in file:
-            elemente = line.split(":")
+            elemente = line.strip().split(":")
             passwortliste3[elemente[0]] = elemente[1]
-        try:
+        if anbieter in passwortliste3.keys():
             print(passwortliste3[anbieter])
-        except:
+        elif anbieter == "alle":
+            print(passwortliste3)
+        else:
             print("Ein solches Passwort liegt nicht vor")
+
 def passwoert_loeschen(anbieter):
     passwortliste3 = {}
     with open("pwd.txt", "r") as file:
         for line in file:
             elemente = line.strip().split(":")
-            passwortliste3[elemente[0]] = elemente
+            passwortliste3[elemente[0]] = elemente[1]
 
         if anbieter in passwortliste3:
             passwortliste3.pop(anbieter)
@@ -46,8 +49,8 @@ def passwoert_loeschen(anbieter):
 
 
 passwortspeichern()
-loeschen_anbieter = input("Lösche einen Anbieter!")
+loeschen_anbieter = input("Lösche einen Anbieter!").lower()
 passwoert_loeschen(loeschen_anbieter)
 
-eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?")
+eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?").lower()
 passwoerter_anzeigen(eingabe_anbieter)
