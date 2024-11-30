@@ -5,7 +5,7 @@ import random
 import string
 
 def generate(länge):
-    passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":")
+    passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":",";")
     return ''.join(random.choice(passwort)for i in range(länge))
 
 def passwortspeichern():
