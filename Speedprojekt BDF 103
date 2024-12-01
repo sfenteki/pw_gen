@@ -4,11 +4,20 @@ print(Pw_generator)
 import random # Importiert einen Zufallsgenerator-Bib
 import string # Importiert die String-Bib um ascii-letters, zahlen und interpunktion einfacher verwenden zu können.
 
-def generate(länge):
+def generate(länge):  # Funktion zur Erstellung eines Zufallspassworts mit einer vorgegebenen Länge
     passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":", ";")
-    return ''.join(random.choice(passwort)for i in range(länge))
+    # Die Variable "passwort" enthält:
+    # - Groß- und Kleinbuchstaben (string.ascii_letters)
+    # - Ziffern (string.digits)
+    # - Sonderzeichen (string.punctuation)
+    # Zusätzlich wird das Zeichen ":" durch ";" ersetzt, da ":" nicht verwendet werden soll.
 
-def passwortspeichern():
+    return ''.join(random.choice(passwort) for i in range(länge)) # Die Funktion gibt das generierte Passwort zurück.
+    # Dabei wird "random.choice" verwendet, um für die angegebene Länge "länge" zufällig Zeichen aus der Variable "passwort" auszuwählen.
+    # mit "join" werden die einzelnen Zeichen zu einem String verbunden.
+
+
+def passwortspeichern():# Funktion zur Passwortspeicherung in einer textdatei
     with open("pwd.txt" , "a")as file: #Der with-block sorgt dafür, dass die Datei automatisch wieder geschlossen wird, modus "a" sorgt dafür, dass, anders als bei "w" neue elemente angehangen und nicht die ganze datei überschrieben wird.
         passwortliste = {} #leeres Dictionary wird erzeugt
         anbieter = input("Welchen Anbieter wollen Sie speichern") #Der Nutzer wird nach einer Eingabe gefragt
@@ -19,32 +28,32 @@ def passwortspeichern():
         return passwortliste
 
 def passwoerter_anzeigen(anbieter):
-    passwortliste3 = {}
+    pwd_zwischenspeicher = {} #temporäre
     with open("pwd.txt" , "r")as file:
         for line in file:
             elemente = line.strip().split(":")
-            passwortliste3[elemente[0]] = elemente[1]
-        if anbieter in passwortliste3.keys():
-            print(passwortliste3[anbieter])
+            pwd_zwischenspeicher[elemente[0]] = elemente[1]
+        if anbieter in pwd_zwischenspeicher.keys():
+            print(pwd_zwischenspeicher[anbieter])
         elif anbieter == "alle":
-            print(passwortliste3)
+            print(pwd_zwischenspeicher)
         else:
             print("Ein solches Passwort liegt nicht vor")
 
 def passwoert_loeschen(anbieter):
-    passwortliste3 = {}
+    pwd_zwischenspeicher = {}
     with open("pwd.txt", "r") as file:
         for line in file:
             elemente = line.strip().split(":")
-            passwortliste3[elemente[0]] = elemente[1]
+            pwd_zwischenspeicher[elemente[0]] = elemente[1]
 
-        if anbieter in passwortliste3:
-            passwortliste3.pop(anbieter)
+        if anbieter in pwd_zwischenspeicher:
+            pwd_zwischenspeicher.pop(anbieter)
             print(f"Passwort {anbieter} gelöscht")
         else:
             print("Du hast dieses Passwort nicht gespeichert")
         with open("pwd.txt", "w") as file:
-            for key, value in passwortliste3.items():
+            for key, value in pwd_zwischenspeicher.items():
                 print(f"{key}:{value}")
                 file.write(f"{key}:{value}\n")
 
@@ -63,11 +72,11 @@ def benutzeroberfläche():
                         print("Herzlich Willkommen")
                         auswahl_manager= input("Pass")
 
-
-
 passwortspeichern()
 loeschen_anbieter = input("Lösche einen Anbieter!").lower()
 passwoert_loeschen(loeschen_anbieter)
 
 eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?").lower()
 passwoerter_anzeigen(eingabe_anbieter)
+
+if __name__ == "__main__":
