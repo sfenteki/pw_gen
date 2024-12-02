@@ -79,7 +79,7 @@ def benutzeroberflaeche():
                 eintrag_passwort_verschlüsselt = master_passwort(vergabe_passwort, schlüssel, liste_von_zeichen)
                 master.write(eintrag_passwort_verschlüsselt)
 
-
+####Leere Datei führt zu Ungereimtheiten. len elemente datei == 0, Master muss angepasst werden.
 def master_passwort(text, shift, zeichen_liste):
     verschluesselt = []
     for zeichen in text:
