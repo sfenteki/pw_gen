@@ -4,18 +4,18 @@
 import random
 import string
 
-def generate():
-    laenge = int(input("Wie lang darf das Passwort sein?"))
+def generate(pwlaenge):
     passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":", ";")
-    shuffle_passwort = "".join(random.choice(passwort) for i in range(laenge))
+    shuffle_passwort = "".join(random.choice(passwort) for i in range(pwlaenge))
     return master_passwort(shuffle_passwort, schlüssel,liste_von_zeichen )
 
 def passwortspeichern():
     with open("pwd.txt" , "a")as file:
         passwortliste = {}
         anbieter = input("Welchen Anbieter wollen Sie speichern")
-        passwortliste[anbieter]=generate()
-        file.write(f"{anbieter}:{generate()}+\n")
+        laenge = int(input("Wie lang darf das Passwort sein?"))
+        passwortliste[anbieter]=generate(laenge)
+        file.write(f"{anbieter}:{generate(laenge)}+\n")
         print(passwortliste)
         return passwortliste
 
@@ -29,8 +29,9 @@ def passwoerter_anzeigen():
         if eingabe_anbieter in passwortliste3.keys():
             wert = passwortliste3[eingabe_anbieter]
             print(entschluesseln(wert, schlüssel, liste_von_zeichen))
-        elif eingabe_anbieter == "alle":
-            print(passwortliste3)
+        #Debug erforderlich. Alle Keys müssten ausgegeben werden
+        #elif eingabe_anbieter == "alle":
+        #    print(passwortliste3)
         else:
             print("Ein solches Passwort liegt nicht vor")
 
@@ -53,7 +54,7 @@ def passwoert_loeschen():
 
 
 def benutzeroberflaeche():
-    counter = 0
+    counter = 3
     while True:
         print("Herzlich Willkommen zum Passwortgenerator.\n")
         try:
@@ -66,20 +67,29 @@ def benutzeroberflaeche():
                     break
 
                 else:
-                    counter += 1
+                    counter -= 1
                     print(f"Falsche Eingabe, du hast noch {counter} Versuche")
-                    if counter == 3:
+                    if counter == 0:
                         print("Zu viele Falscheingaben. Es wird nun alles gelöscht")
                         with open("pwd.txt", "w")as file:
                             file.write("")
-                            break
-        except:
+                        break
+        except FileNotFoundError:
             with open("master.txt", "w")as master:
-                vergabe_passwort = input("Vergib nun ein Passwort")
-                eintrag_passwort_verschlüsselt = master_passwort(vergabe_passwort, schlüssel, liste_von_zeichen)
-                master.write(eintrag_passwort_verschlüsselt)
 
-####Leere Datei führt zu Ungereimtheiten. len elemente datei == 0, Master muss angepasst werden.
+                while True:
+                    vergabe_passwort = input("Vergib nun ein Passwort")
+                    eintrag_passwort_verschlüsselt = master_passwort(vergabe_passwort, schlüssel, liste_von_zeichen)
+                    if len(eintrag_passwort_verschlüsselt) <12:
+                        print("Das Passwort is zu unsicher. Das werde ich nicht speichern")
+                        continue
+                    else:
+                        bestaetigung = input("Geben Sie das Passwort erneut ein")
+                        if eintrag_passwort_verschlüsselt == master_passwort(bestaetigung, schlüssel, liste_von_zeichen):
+                            print("Herzlichen Glückwunsch, Sie haben sich ein Passwort vergeben")
+                            master.write(eintrag_passwort_verschlüsselt)
+                            break
+
 def master_passwort(text, shift, zeichen_liste):
     verschluesselt = []
     for zeichen in text:
@@ -116,7 +126,7 @@ def verschlüsselung_definieren():
             n = aufforderung_vergabe
             keyfile.write(n)
     return n
-
+####def liste von zeichen aus funktion sicherer.
 liste_von_zeichen = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -142,4 +152,3 @@ if __name__ == "__main__":
                 passwoert_loeschen()
             case _:
                 continue
-
