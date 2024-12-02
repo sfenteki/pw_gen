@@ -64,17 +64,55 @@ def benutzeroberfläche():
                         print("Herzlich Willkommen")
                         auswahl_manager= input("Pass")
 
-def verschlüsselung(master_passwort):
-    
+def master_passwort(text, shift, zeichen_liste):
+    verschluesselt = []
+    for zeichen in text:
+        if zeichen in zeichen_liste:
+            index = zeichen_liste.index(zeichen)
+            neuer_index = (index + shift) % len(zeichen_liste)
+            verschluesselt.append(zeichen_liste[neuer_index])
+        else:
+            verschluesselt.append(zeichen)
+
+    return "".join(verschluesselt)
 
 
-passwortlaenge = int("Wie lang soll das Passwort sein?")
+def entschluesseln(verschlüsseltes_passwort,shift, zeichen_liste):
+    unverschluesselt = []
+    for zeichen in verschlüsseltes_passwort:
+        if zeichen in zeichen_liste:
+            index = zeichen_liste.index(zeichen)
+            neuer_index = (index-shift)% len(zeichen_liste)
+            unverschluesselt.append(zeichen_liste[neuer_index])
+        else:
+            unverschluesselt.append(zeichen_liste[zeichen])
+
+    return "".join(unverschluesselt)
+
+
+def verschlüsselung_definieren():
+    try:
+        with open("key.txt" , "r") as keyfile:
+            n= keyfile.read()
+    except:
+        with open("key.txt", "w") as keyfile:
+            aufforderung_vergabe = input("Wie lautet der Schlüssel?")
+            n = aufforderung_vergabe
+            keyfile.write(n)
+    return n
+
+liste_von_zeichen = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@',
+    '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', ' ']
+
+schlüssel = int(verschlüsselung_definieren())
+passwortlaenge = int(input("Wie lang soll das Passwort sein?"))
 generate(passwortlaenge)
 loeschen_anbieter = input("Lösche einen Anbieter!").lower()
 passwoert_loeschen(loeschen_anbieter)
 
-eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?").lower()
-passwoerter_anzeigen(eingabe_anbieter)
 eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?").lower()
 passwoerter_anzeigen(eingabe_anbieter)
 
