@@ -4,7 +4,7 @@
 import random
 import string
 
-def generate(länge):
+def generate(länge):####1:1 ChatGPT entnommen!!!!!!!!!!!
     passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":", ";")
     return ''.join(random.choice(passwort)for i in range(länge))
 
@@ -64,7 +64,7 @@ def benutzeroberfläche():
                         print("Herzlich Willkommen")
                         auswahl_manager= input("Pass")
 
-def master_passwort(text, shift, zeichen_liste):
+def master_passwort(text, shift, zeichen_liste):#####ChaGPT verwendte, insbesondere aufgrund Unkenntnis der ".index" Form
     verschluesselt = []
     for zeichen in text:
         if zeichen in zeichen_liste:
