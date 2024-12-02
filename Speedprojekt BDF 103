@@ -1,45 +1,49 @@
 # Speedprojekt BDF 103
-# Pw_generator
+#Pw_generator
 
 import random
 import string
 
-def generate(länge):####1:1 ChatGPT entnommen!!!!!!!!!!!
+def generate():
+    laenge = int(input("Wie lang darf das Passwort sein?"))
     passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":", ";")
-    return ''.join(random.choice(passwort)for i in range(länge))
+    shuffle_passwort = "".join(random.choice(passwort) for i in range(laenge))
+    return master_passwort(shuffle_passwort, schlüssel,liste_von_zeichen )
 
 def passwortspeichern():
     with open("pwd.txt" , "a")as file:
         passwortliste = {}
         anbieter = input("Welchen Anbieter wollen Sie speichern")
-        passwortliste[anbieter]=generate(16)
-        file.write(f"{anbieter}:{generate(16)}+\n")
+        passwortliste[anbieter]=generate()
+        file.write(f"{anbieter}:{generate()}+\n")
         print(passwortliste)
         return passwortliste
 
-def passwoerter_anzeigen(anbieter):
+def passwoerter_anzeigen():
     passwortliste3 = {}
+    eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?").lower()
     with open("pwd.txt" , "r")as file:
         for line in file:
             elemente = line.strip().split(":")
             passwortliste3[elemente[0]] = elemente[1]
-        if anbieter in passwortliste3.keys():
-            print(passwortliste3[anbieter])
-        elif anbieter == "alle":
+        if eingabe_anbieter in passwortliste3.keys():
+            wert = passwortliste3[eingabe_anbieter]
+            print(entschluesseln(wert, schlüssel, liste_von_zeichen))
+        elif eingabe_anbieter == "alle":
             print(passwortliste3)
         else:
             print("Ein solches Passwort liegt nicht vor")
 
-def passwoert_loeschen(anbieter):
+def passwoert_loeschen():
     passwortliste3 = {}
+    loeschen_anbieter = input("Lösche einen Anbieter!").lower()
     with open("pwd.txt", "r") as file:
         for line in file:
             elemente = line.strip().split(":")
             passwortliste3[elemente[0]] = elemente[1]
-
-        if anbieter in passwortliste3:
-            passwortliste3.pop(anbieter)
-            print(f"Passwort {anbieter} gelöscht")
+        if loeschen_anbieter in passwortliste3:
+            passwortliste3.pop(loeschen_anbieter)
+            print(f"Passwort {loeschen_anbieter} gelöscht")
         else:
             print("Du hast dieses Passwort nicht gespeichert")
         with open("pwd.txt", "w") as file:
@@ -48,23 +52,35 @@ def passwoert_loeschen(anbieter):
                 file.write(f"{key}:{value}\n")
 
 
-def benutzeroberfläche():
-    print("Herzlich Willkommen zum Passwortgenerator.\n")
-    with open("master.txt", "r")as master:
-        for elemente in master:
-            if len(elemente) == 0:
-                vergabe_passwort = int(input("Bitte vergeben Sie sich ein Passwort")).encode("utf-8")
-                master.write(f"{vergabe_passwort}")
-            else:
-                with open("master.txt", "r")as master:
-                    for element in master:
-                        element.strip()
-                    passworteingabe = input("Geben Sie zunächst Ihr Passwort ein").encode("utf-8")
-                    if passworteingabe == element:
-                        print("Herzlich Willkommen")
-                        auswahl_manager= input("Pass")
+def benutzeroberflaeche():
+    counter = 0
+    while True:
+        print("Herzlich Willkommen zum Passwortgenerator.\n")
+        try:
+            with open("master.txt", "r")as master:
+                wert_master = master.read()
+                passworteingabe =input("Gib das Passwort ein")
+                passwort_eingabe_verschlüsselt = master_passwort(passworteingabe, schlüssel, liste_von_zeichen)
+                if passwort_eingabe_verschlüsselt == wert_master:
+                    print("Herzlich Willkommen\nDie Eingabe war korrekt")
+                    break
 
-def master_passwort(text, shift, zeichen_liste):#####ChaGPT verwendte, insbesondere aufgrund Unkenntnis der ".index" Form
+                else:
+                    counter += 1
+                    print(f"Falsche Eingabe, du hast noch {counter} Versuche")
+                    if counter == 3:
+                        print("Zu viele Falscheingaben. Es wird nun alles gelöscht")
+                        with open("pwd.txt", "w")as file:
+                            file.write("")
+                            break
+        except:
+            with open("master.txt", "w")as master:
+                vergabe_passwort = input("Vergib nun ein Passwort")
+                eintrag_passwort_verschlüsselt = master_passwort(vergabe_passwort, schlüssel, liste_von_zeichen)
+                master.write(eintrag_passwort_verschlüsselt)
+
+
+def master_passwort(text, shift, zeichen_liste):
     verschluesselt = []
     for zeichen in text:
         if zeichen in zeichen_liste:
@@ -107,13 +123,23 @@ liste_von_zeichen = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
     '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@',
     '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', ' ']
 
+
 schlüssel = int(verschlüsselung_definieren())
-passwortlaenge = int(input("Wie lang soll das Passwort sein?"))
-generate(passwortlaenge)
-loeschen_anbieter = input("Lösche einen Anbieter!").lower()
-passwoert_loeschen(loeschen_anbieter)
-
-eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?").lower()
-passwoerter_anzeigen(eingabe_anbieter)
-
+####Option Passwort generieren wird ausgelassen, da zu große Sicherheitslücke. Gibt die Verschlüsselte Variante der Eingabe. Dadurch kann man Rückschlküse auf den Schlüssel ziehen.
 if __name__ == "__main__":
+    while True:
+        benutzeroberflaeche()
+        eingabe = input("Passwörter anzeigen\nPasswörter speichern\nPasswörter löschen\nProgramm beenden").lower()
+        match eingabe:
+            case "anzeigen":
+                passwoerter_anzeigen()
+            case "beenden":
+                input("Beliebige Taste zum Beenden drücken")
+                break
+            case "speichern":
+                passwortspeichern()
+            case "löschen":
+                passwoert_loeschen()
+            case _:
+                continue
+
