@@ -1,154 +1,209 @@
 # Speedprojekt BDF 103
-#Pw_generator
+# Pw_generator
 
-import random
-import string
+import random  # Importiert die Bibliothek für Zufallsfunktionen
+import string  # Importiert die Bibliothek für Zeichenfunktionen
 
-def generate(pwlaenge):
-    passwort = (string.ascii_letters + string.digits + string.punctuation).replace(":", ";")
-    shuffle_passwort = "".join(random.choice(passwort) for i in range(pwlaenge))
-    return master_passwort(shuffle_passwort, schlüssel,liste_von_zeichen )
 
+# Funktion zur Passwortgenerierung
+def passwort_generieren(laenge):  # Erstellt ein Passwort mit zufälligen Zeichen basierend auf der angegebenen Länge
+    if laenge < 8:  # Überprüft, ob die Passwortlänge kleiner als 8 ist
+        raise ValueError(
+            "Das Passwort muss mindestens 8 Zeichen lang sein.")  # Gibt einen Fehler aus, wenn die Länge zu kurz ist
+
+    # Definiert die Kategorien von Zeichen, die verwendet werden können
+    upper = string.ascii_uppercase  # Großbuchstaben (A-Z)
+    lower = string.ascii_lowercase  # Kleinbuchstaben (a-z)
+    digits = string.digits  # Ziffern (0-9)
+    special = "!@#$%^&*()_+-=[]{}|;:,.<>?/"  # Sonderzeichen
+
+    # Fügt mindestens ein Zeichen aus jeder Kategorie in die Liste ein
+    all_chars = [
+        random.choice(upper),  # Wählt einen zufälligen Großbuchstaben
+        random.choice(lower),  # Wählt einen zufälligen Kleinbuchstaben
+        random.choice(digits),  # Wählt eine zufällige Ziffer
+        random.choice(special)  # Wählt ein zufälliges Sonderzeichen
+    ]
+
+    # Berechnet die Anzahl der noch fehlenden Zeichen für das Passwort
+    restliche_laenge = laenge - len(all_chars)
+    if restliche_laenge > 0:  # Falls noch Zeichen benötigt werden
+        # Ergänzt die Liste mit zufälligen Zeichen aus allen Kategorien
+        all_chars.extend(random.choices(upper + lower + digits + special, k=restliche_laenge))
+
+    random.shuffle(all_chars)  # Mischt die Liste, um die Zeichen zufällig anzuordnen
+    return ''.join(all_chars)  # Gibt die Liste als Zeichenkette zurück
+
+
+# Funktion zum Speichern eines Anbieters und seines Passworts
 def passwortspeichern():
-    with open("pwd.txt" , "a")as file:
-        passwortliste = {}
-        anbieter = input("Welchen Anbieter wollen Sie speichern")
-        laenge = int(input("Wie lang darf das Passwort sein?"))
-        passwortliste[anbieter]=generate(laenge)
-        file.write(f"{anbieter}:{generate(laenge)}+\n")
-        print(passwortliste)
-        return passwortliste
+    with open("pwd.txt", "a") as file:  # Öffnet die Datei "pwd.txt" im Anhangsmodus
+        passwortliste = {}  # Erstellt ein leeres Dictionary für Anbieter und Passwörter
+        anbieter = input("Welchen Anbieter wollen Sie speichern? ")  # Fragt nach dem Anbieter
+        laenge = int(input("Wie lang darf das Passwort sein? "))  # Fragt nach der gewünschten Passwortlänge
+        passwort = passwort_generieren(laenge)  # Generiert ein Passwort basierend auf der gewünschten Länge
+        passwortliste[anbieter] = passwort  # Speichert den Anbieter und das Passwort im Dictionary
+        file.write(
+            f"{anbieter}:{passwort}+\n")  # Schreibt Anbieter und Passwort im Format "anbieter:passwort" in die Datei
+        print("\n✔️ Passwort erfolgreich gespeichert!\n")
+        return passwortliste  # Gibt die Passwortliste zurück
 
+
+# Funktion, um gespeicherte Passwörter anzuzeigen
 def passwoerter_anzeigen():
-    passwortliste3 = {}
-    eingabe_anbieter = input("Welchen Anbieter möchtes du abrufen?").lower()
-    with open("pwd.txt" , "r")as file:
-        for line in file:
-            elemente = line.strip().split(":")
-            passwortliste3[elemente[0]] = elemente[1]
-        if eingabe_anbieter in passwortliste3.keys():
-            wert = passwortliste3[eingabe_anbieter]
-            print(entschluesseln(wert, schlüssel, liste_von_zeichen))
-        #Debug erforderlich. Alle Keys müssten ausgegeben werden
-        #elif eingabe_anbieter == "alle":
-        #    print(passwortliste3)
-        else:
-            print("Ein solches Passwort liegt nicht vor")
+    passwortliste3 = {}  # Erstellt ein leeres Dictionary für die geladenen Passwörter
+    eingabe_anbieter = input(
+        "Welchen Anbieter möchtest du abrufen? ").lower()  # Fragt nach dem Anbieter und wandelt die Eingabe in Kleinbuchstaben um
 
+    with open("pwd.txt", "r") as file:  # Öffnet die Datei "pwd.txt" im Lesemodus
+        for line in file:  # Iteriert durch jede Zeile in der Datei
+            elemente = line.strip().split(":")  # Teilt die Zeile in Anbieter und Passwort anhand des Doppelpunkts
+            passwortliste3[elemente[0]] = elemente[
+                1]  # Speichert den Anbieter und das verschlüsselte Passwort im Dictionary
+
+        if eingabe_anbieter in passwortliste3:  # Prüft, ob der eingegebene Anbieter in der Passwortliste vorhanden ist
+            wert = passwortliste3[eingabe_anbieter]  # Holt das Passwort für den Anbieter
+            print(
+                f"\n🔓 Passwort für {eingabe_anbieter}: {entschluesseln(wert, schlüssel, liste_von_zeichen)}\n")  # Entschlüsselt das Passwort und gibt es aus
+        else:  # Falls der Anbieter nicht gefunden wurde
+            print("\n❌ Ein solches Passwort liegt nicht vor.\n")  # Gibt eine Fehlermeldung aus
+
+
+# Funktion zum Löschen eines Anbieters und seines Passworts
 def passwoert_loeschen():
-    passwortliste3 = {}
-    loeschen_anbieter = input("Lösche einen Anbieter!").lower()
-    with open("pwd.txt", "r") as file:
-        for line in file:
-            elemente = line.strip().split(":")
-            passwortliste3[elemente[0]] = elemente[1]
-        if loeschen_anbieter in passwortliste3:
-            passwortliste3.pop(loeschen_anbieter)
-            print(f"Passwort {loeschen_anbieter} gelöscht")
-        else:
-            print("Du hast dieses Passwort nicht gespeichert")
-        with open("pwd.txt", "w") as file:
-            for key, value in passwortliste3.items():
-                print(f"{key}:{value}")
-                file.write(f"{key}:{value}\n")
+    passwortliste3 = {}  # Erstellt ein leeres Dictionary für die geladenen Passwörter
+    loeschen_anbieter = input(
+        "Lösche einen Anbieter: ").lower()  # Fragt nach dem Anbieter und wandelt die Eingabe in Kleinbuchstaben um
+
+    with open("pwd.txt", "r") as file:  # Öffnet die Datei "pwd.txt" im Lesemodus
+        for line in file:  # Iteriert durch jede Zeile in der Datei
+            elemente = line.strip().split(":")  # Teilt die Zeile in Anbieter und Passwort
+            passwortliste3[elemente[0]] = elemente[1]  # Speichert den Anbieter und das Passwort im Dictionary
+
+        if loeschen_anbieter in passwortliste3:  # Prüft, ob der Anbieter existiert
+            passwortliste3.pop(loeschen_anbieter)  # Entfernt den Anbieter und das Passwort aus dem Dictionary
+            print(f"\n✔️ Passwort für {loeschen_anbieter} erfolgreich gelöscht.\n")
+        else:  # Falls der Anbieter nicht gefunden wurde
+            print("\n❌ Ein solches Passwort ist nicht gespeichert.\n")
+
+    with open("pwd.txt", "w") as file:  # Öffnet die Datei "pwd.txt" im Schreibmodus
+        for key, value in passwortliste3.items():  # Iteriert durch die verbleibenden Daten
+            file.write(f"{key}:{value}\n")  # Schreibt die verbleibenden Anbieter und Passwörter zurück in die Datei
 
 
-def benutzeroberflaeche():
-    counter = 3
-    while True:
-        print("Herzlich Willkommen zum Passwortgenerator.\n")
-        try:
-            with open("master.txt", "r")as master:
-                wert_master = master.read()
-                passworteingabe =input("Gib das Passwort ein")
-                passwort_eingabe_verschlüsselt = master_passwort(passworteingabe, schlüssel, liste_von_zeichen)
-                if passwort_eingabe_verschlüsselt == wert_master:
-                    print("Herzlich Willkommen\nDie Eingabe war korrekt")
-                    break
+# Funktion zur Definition des Verschlüsselungsschlüssels
+def verschlüsselung_definieren():
+    try:  # Versucht, den Schlüssel aus einer Datei zu lesen
+        with open("key.txt", "r") as keyfile:  # Öffnet die Datei "key.txt" im Lesemodus
+            n = keyfile.read()  # Liest den gespeicherten Schlüssel
+    except:  # Falls die Datei nicht existiert
+        with open("key.txt", "w") as keyfile:  # Erstellt die Datei "key.txt" im Schreibmodus
+            aufforderung_vergabe = input("Wie lautet der Schlüssel? ")  # Fragt den Benutzer nach einem Schlüssel
+            n = aufforderung_vergabe  # Speichert den Schlüssel in der Variablen
+            keyfile.write(n)  # Schreibt den Schlüssel in die Datei
+    return n  # Gibt den Schlüssel zurück
 
-                else:
-                    counter -= 1
-                    print(f"Falsche Eingabe, du hast noch {counter} Versuche")
-                    if counter == 0:
-                        print("Zu viele Falscheingaben. Es wird nun alles gelöscht")
-                        with open("pwd.txt", "w")as file:
-                            file.write("")
-                        break
-        except FileNotFoundError:
-            with open("master.txt", "w")as master:
 
-                while True:
-                    vergabe_passwort = input("Vergib nun ein Passwort")
-                    eintrag_passwort_verschlüsselt = master_passwort(vergabe_passwort, schlüssel, liste_von_zeichen)
-                    if len(eintrag_passwort_verschlüsselt) <12:
-                        print("Das Passwort is zu unsicher. Das werde ich nicht speichern")
-                        continue
-                    else:
-                        bestaetigung = input("Geben Sie das Passwort erneut ein")
-                        if eintrag_passwort_verschlüsselt == master_passwort(bestaetigung, schlüssel, liste_von_zeichen):
-                            print("Herzlichen Glückwunsch, Sie haben sich ein Passwort vergeben")
-                            master.write(eintrag_passwort_verschlüsselt)
-                            break
-
-def master_passwort(text, shift, zeichen_liste):
+# Funktion zur Verschlüsselung von Texten
+def master_passwort(text, shift, liste_von_zeichen):
     verschluesselt = []
     for zeichen in text:
-        if zeichen in zeichen_liste:
-            index = zeichen_liste.index(zeichen)
-            neuer_index = (index + shift) % len(zeichen_liste)
-            verschluesselt.append(zeichen_liste[neuer_index])
+        if zeichen in liste_von_zeichen:
+            index = liste_von_zeichen.index(zeichen)
+            neuer_index = (index + shift) % len(liste_von_zeichen)
+            verschluesselt.append(liste_von_zeichen[neuer_index])
         else:
             verschluesselt.append(zeichen)
-
     return "".join(verschluesselt)
 
 
-def entschluesseln(verschlüsseltes_passwort,shift, zeichen_liste):
+# Funktion zur Entschlüsselung von Texten
+def entschluesseln(verschlüsseltes_passwort, shift, liste_von_zeichen):
     unverschluesselt = []
     for zeichen in verschlüsseltes_passwort:
-        if zeichen in zeichen_liste:
-            index = zeichen_liste.index(zeichen)
-            neuer_index = (index-shift)% len(zeichen_liste)
-            unverschluesselt.append(zeichen_liste[neuer_index])
+        if zeichen in liste_von_zeichen:
+            index = liste_von_zeichen.index(zeichen)
+            neuer_index = (index - shift) % len(liste_von_zeichen)
+            unverschluesselt.append(liste_von_zeichen[neuer_index])
         else:
-            unverschluesselt.append(zeichen_liste[zeichen])
-
+            unverschluesselt.append(zeichen)
     return "".join(unverschluesselt)
 
 
-def verschlüsselung_definieren():
-    try:
-        with open("key.txt" , "r") as keyfile:
-            n= keyfile.read()
-    except:
-        with open("key.txt", "w") as keyfile:
-            aufforderung_vergabe = input("Wie lautet der Schlüssel?")
-            n = aufforderung_vergabe
-            keyfile.write(n)
-    return n
-####def liste von zeichen aus funktion sicherer.
-liste_von_zeichen = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@',
-    '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', ' ']
+# Benutzeroberfläche
+def benutzeroberflaeche():
+    counter = 3
+    print("\n" + "=" * 40)
+    print(" HERZLICH WILLKOMMEN ZUM PASSWORTGENERATOR ")
+    print("=" * 40 + "\n")
 
-
-schlüssel = int(verschlüsselung_definieren())
-####Option Passwort generieren wird ausgelassen, da zu große Sicherheitslücke. Gibt die Verschlüsselte Variante der Eingabe. Dadurch kann man Rückschlküse auf den Schlüssel ziehen.
-if __name__ == "__main__":
     while True:
-        benutzeroberflaeche()
-        eingabe = input("Passwörter anzeigen\nPasswörter speichern\nPasswörter löschen\nProgramm beenden").lower()
+        try:
+            with open("master.txt", "r") as master:
+                wert_master = master.read()
+                print("\nBitte geben Sie Ihr Masterpasswort ein:\n")
+                passworteingabe = input("> ")
+                passwort_eingabe_verschlüsselt = master_passwort(passworteingabe, schlüssel, liste_von_zeichen)
+
+                if passwort_eingabe_verschlüsselt == wert_master:
+                    print("\n🎉 Zugang erfolgreich! Willkommen im Passwortmanager 🎉\n")
+                    break
+                else:
+                    counter -= 1
+                    print(f"⚠️  Falsches Passwort. Verbleibende Versuche: {counter}")
+                    if counter == 0:
+                        print("\n❌ Zu viele Fehlversuche. Alle gespeicherten Passwörter werden gelöscht. ❌\n")
+                        with open("pwd.txt", "w") as file:
+                            file.write("")
+                        break
+        except FileNotFoundError:
+            print("\n⚙️  Masterpasswort erstellen ⚙️\n")
+            with open("master.txt", "w") as master:
+                while True:
+                    vergabe_passwort = input("Neues Masterpasswort (min. 12 Zeichen):\n> ")
+                    eintrag_passwort_verschlüsselt = master_passwort(vergabe_passwort, schlüssel, liste_von_zeichen)
+
+                    if len(eintrag_passwort_verschlüsselt) < 12:
+                        print("\n⚠️  Passwort zu kurz! Es muss mindestens 12 Zeichen lang sein. ⚠️\n")
+                        continue
+                    else:
+                        bestaetigung = input("Bitte bestätigen Sie Ihr Passwort:\n> ")
+                        if eintrag_passwort_verschlüsselt == master_passwort(bestaetigung, schlüssel,
+                                                                             liste_von_zeichen):
+                            print("\n✔️  Masterpasswort erfolgreich erstellt! ✔️\n")
+                            master.write(eintrag_passwort_verschlüsselt)
+                            break
+
+                        # Hauptprogramm
+
+
+liste_von_zeichen = list(string.ascii_letters + string.digits + string.punctuation + " ")
+schlüssel = int(verschlüsselung_definieren())
+
+if __name__ == "__main__":
+    benutzeroberflaeche()
+
+    while True:
+        print("\n1: Passwörter anzeigen")
+        print("2: Passwörter generieren und speichern")
+        print("3: Passwörter löschen")
+        print("4: Programm beenden")
+
+        try:
+            eingabe = int(input("\nBitte eine Option auswählen: "))
+        except ValueError:
+            print("\n❌ Ungültige Eingabe. Bitte eine Zahl zwischen 1 und 4 eingeben.\n")
+            continue
+
         match eingabe:
-            case "anzeigen":
+            case 1:
                 passwoerter_anzeigen()
-            case "beenden":
-                input("Beliebige Taste zum Beenden drücken")
-                break
-            case "speichern":
+            case 2:
                 passwortspeichern()
-            case "löschen":
+            case 3:
                 passwoert_loeschen()
+            case 4:
+                input("\nDrücken Sie eine beliebige Taste, um das Programm zu beenden.\n")
+                break
             case _:
-                continue
+                print("\n❌ Ungültige Auswahl. Bitte eine Zahl zwischen 1 und 4 eingeben.\n")
