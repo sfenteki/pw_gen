@@ -158,21 +158,21 @@ def benutzeroberflaeche():
                         break
         except FileNotFoundError:
             print("\n⚙️  Masterpasswort erstellen ⚙️\n")
-            with open("master.txt", "w") as master:
-                while True:
-                    vergabe_passwort = input("Neues Masterpasswort (min. 12 Zeichen):\n> ")
-                    eintrag_passwort_verschlüsselt = master_passwort(vergabe_passwort, schlüssel, liste_von_zeichen)
-
-                    if len(eintrag_passwort_verschlüsselt) < 12:
-                        print("\n⚠️  Passwort zu kurz! Es muss mindestens 12 Zeichen lang sein. ⚠️\n")
-                        continue
-                    else:
+            while True:
+                vergabe_passwort = input("Neues Masterpasswort (min. 12 Zeichen):\n> ")
+                eintrag_passwort_verschlüsselt = master_passwort(vergabe_passwort, schlüssel, liste_von_zeichen)
+                if len(eintrag_passwort_verschlüsselt) < 12:
+                    print("\n⚠️  Passwort zu kurz! Es muss mindestens 12 Zeichen lang sein. ⚠️\n")
+                    continue
+                else:
+                    with open("master.txt", "w") as master:
                         bestaetigung = input("Bitte bestätigen Sie Ihr Passwort:\n> ")
                         if eintrag_passwort_verschlüsselt == master_passwort(bestaetigung, schlüssel,
-                                                                             liste_von_zeichen):
+                                                                                 liste_von_zeichen):
                             print("\n✔️  Masterpasswort erfolgreich erstellt! ✔️\n")
                             master.write(eintrag_passwort_verschlüsselt)
                             break
+      
 
                         # Hauptprogramm
 
