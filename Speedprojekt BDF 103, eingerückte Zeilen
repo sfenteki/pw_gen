@@ -70,7 +70,7 @@ def passwoerter_anzeigen():
             with open("pwd.txt", "r") as alle:
                 werte = alle.read()
                 print(werte)
-        else:                                                                                                     # Falls der Anbieter nicht gefunden wurde
+        else:                                                                                                      # Falls der Anbieter nicht gefunden wurde
             print("\n❌ Ein solches Passwort liegt nicht vor.\n")                                                 # Gibt eine Fehlermeldung aus
 
 
@@ -86,27 +86,27 @@ def passwoert_loeschen():
             passwortliste3[elemente[0]] = elemente[1]                                                              # Speichert den Anbieter und das Passwort im Dictionary
 
         if loeschen_anbieter in passwortliste3:                                                                    # Prüft, ob der Anbieter existiert
-            passwortliste3.pop(loeschen_anbieter)                                        # Entfernt den Anbieter und das Passwort aus dem Dictionary
+            passwortliste3.pop(loeschen_anbieter)                                                                  # Entfernt den Anbieter und das Passwort aus dem Dictionary
             print(f"\n✔️ Passwort für {loeschen_anbieter} erfolgreich gelöscht.\n")
-        else:                                                                            # Falls der Anbieter nicht gefunden wurde
+        else:                                                                                                      # Falls der Anbieter nicht gefunden wurde
             print("\n❌ Ein solches Passwort ist nicht gespeichert.\n")
 
-    with open("pwd.txt", "w") as file:                      # Öffnet die Datei "pwd.txt" im Schreibmodus
-        for key, value in passwortliste3.items():           # Iteriert durch die verbleibenden Daten
-            file.write(f"{key}:{value}\n")                  # Schreibt die verbleibenden Anbieter und Passwörter zurück in die Datei
+    with open("pwd.txt", "w") as file:                                                                             # Öffnet die Datei "pwd.txt" im Schreibmodus
+        for key, value in passwortliste3.items():                                                                  # Iteriert durch die verbleibenden Daten
+            file.write(f"{key}:{value}\n")                                                                         # Schreibt die verbleibenden Anbieter und Passwörter zurück in die Datei
 
 
 # Funktion zur Definition des Verschlüsselungsschlüssels
 def verschlüsselung_definieren():
-    try:                                                                  # Versucht, den Schlüssel aus einer Datei zu lesen
-        with open("key.txt", "r") as keyfile:                             # Öffnet die Datei "key.txt" im Lesemodus
-            n = keyfile.read()                                            # Liest den gespeicherten Schlüssel
-    except:  # Falls die Datei nicht existiert
-        with open("key.txt", "w") as keyfile:                             # Erstellt die Datei "key.txt" im Schreibmodus
-            aufforderung_vergabe = input("Wie lautet der Schlüssel? ")    # Fragt den Benutzer nach einem Schlüssel
-            n = aufforderung_vergabe                                      # Speichert den Schlüssel in der Variablen
-            keyfile.write(n)                                              # Schreibt den Schlüssel in die Datei
-    return n                                                              # Gibt den Schlüssel zurück
+    try:                                                                                                            # Versucht, den Schlüssel aus einer Datei zu lesen
+        with open("key.txt", "r") as keyfile:                                                                       # Öffnet die Datei "key.txt" im Lesemodus
+            n = keyfile.read()                                                                                      # Liest den gespeicherten Schlüssel
+    except:                                                                                                         # Falls die Datei nicht existiert
+        with open("key.txt", "w") as keyfile:                                                                       # Erstellt die Datei "key.txt" im Schreibmodus
+            aufforderung_vergabe = input("Wie lautet der Schlüssel? ")                                              # Fragt den Benutzer nach einem Schlüssel
+            n = aufforderung_vergabe                                                                                # Speichert den Schlüssel in der Variablen
+            keyfile.write(n)                                                                                        # Schreibt den Schlüssel in die Datei
+    return n                                                                                                        # Gibt den Schlüssel zurück
 
 
 # Funktion zur Verschlüsselung von Texten
