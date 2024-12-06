@@ -15,7 +15,7 @@ def passwort_generieren(laenge):  # Erstellt ein Passwort mit zufälligen Zeiche
     upper = string.ascii_uppercase  # Großbuchstaben (A-Z)
     lower = string.ascii_lowercase  # Kleinbuchstaben (a-z)
     digits = string.digits  # Ziffern (0-9)
-    special = "!@#$%^&*()_+-=[]{}|;:,.<>?/"  # Sonderzeichen
+    special = "!@#$%^&*()_+-=[]{}|;,.<>?/"  # Sonderzeichen
 
     # Fügt mindestens ein Zeichen aus jeder Kategorie in die Liste ein
     all_chars = [
