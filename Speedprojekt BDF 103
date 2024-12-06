@@ -53,7 +53,7 @@ def passwortspeichern():
 def passwoerter_anzeigen():
     passwortliste3 = {}  # Erstellt ein leeres Dictionary für die geladenen Passwörter
     eingabe_anbieter = input(
-        "Welchen Anbieter möchtest du abrufen? ").lower()  # Fragt nach dem Anbieter und wandelt die Eingabe in Kleinbuchstaben um
+        "Welchen Anbieter möchtest du abrufen? Optional "alle" eingeben ").lower()  # Fragt nach dem Anbieter und wandelt die Eingabe in Kleinbuchstaben um
 
     with open("pwd.txt", "r") as file:  # Öffnet die Datei "pwd.txt" im Lesemodus
         for line in file:  # Iteriert durch jede Zeile in der Datei
@@ -65,6 +65,10 @@ def passwoerter_anzeigen():
             wert = passwortliste3[eingabe_anbieter]  # Holt das Passwort für den Anbieter
             print(
                 f"\n🔓 Passwort für {eingabe_anbieter}: {entschluesseln(wert, schlüssel, liste_von_zeichen)}\n")  # Entschlüsselt das Passwort und gibt es aus
+        elif eingabe_anbieter == "alle":
+            with open("pwd.txt", "r") as alle:
+                werte = alle.read()
+                print(werte)
         else:  # Falls der Anbieter nicht gefunden wurde
             print("\n❌ Ein solches Passwort liegt nicht vor.\n")  # Gibt eine Fehlermeldung aus
 
