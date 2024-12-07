@@ -1,4 +1,3 @@
-# Speedprojekt BDF 103
 # Pw_generator
 
 import random  # Importiert die Bibliothek für Zufallsfunktionen
@@ -39,7 +38,7 @@ def passwort_generieren(laenge):  # Erstellt ein Passwort mit zufälligen Zeiche
 def passwortspeichern():
     with open("pwd.txt", "a") as file:  # Öffnet die Datei "pwd.txt" im Anhangsmodus
         passwortliste = {}  # Erstellt ein leeres Dictionary für Anbieter und Passwörter
-        anbieter = input("Welchen Anbieter wollen Sie speichern? ")  # Fragt nach dem Anbieter
+        anbieter = input("Welchen Anbieter wollen Sie speichern? ").lower()  # Fragt nach dem Anbieter
         laenge = int(input("Wie lang darf das Passwort sein? "))  # Fragt nach der gewünschten Passwortlänge
         passwort = passwort_generieren(laenge)  # Generiert ein Passwort basierend auf der gewünschten Länge
         passwortliste[anbieter] = passwort  # Speichert den Anbieter und das Passwort im Dictionary
@@ -53,7 +52,7 @@ def passwortspeichern():
 def passwoerter_anzeigen():
     passwortliste3 = {}  # Erstellt ein leeres Dictionary für die geladenen Passwörter
     eingabe_anbieter = input(
-        "Welchen Anbieter möchtest du abrufen? Optional "alle" eingeben ").lower()  # Fragt nach dem Anbieter und wandelt die Eingabe in Kleinbuchstaben um
+        "Welchen Anbieter möchtest du abrufen? Optional \" alle\" eingeben ").lower()  # Fragt nach dem Anbieter und wandelt die Eingabe in Kleinbuchstaben um
 
     with open("pwd.txt", "r") as file:  # Öffnet die Datei "pwd.txt" im Lesemodus
         for line in file:  # Iteriert durch jede Zeile in der Datei
@@ -172,11 +171,10 @@ def benutzeroberflaeche():
                     with open("master.txt", "w") as master:
                         bestaetigung = input("Bitte bestätigen Sie Ihr Passwort:\n> ")
                         if eintrag_passwort_verschlüsselt == master_passwort(bestaetigung, schlüssel,
-                                                                                 liste_von_zeichen):
+                                                                             liste_von_zeichen):
                             print("\n✔️  Masterpasswort erfolgreich erstellt! ✔️\n")
                             master.write(eintrag_passwort_verschlüsselt)
                             break
-      
 
                         # Hauptprogramm
 
