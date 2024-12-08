@@ -1,15 +1,10 @@
 # Pw_generator
-
 import random  # Importiert die Bibliothek für Zufallsfunktionen
 import string  # Importiert die Bibliothek für Zeichenfunktionen
 
 
 # Funktion zur Passwortgenerierung
 def passwort_generieren(laenge):  # Erstellt ein Passwort mit zufälligen Zeichen basierend auf der angegebenen Länge
-    if laenge < 8:  # Überprüft, ob die Passwortlänge kleiner als 8 ist
-        raise ValueError(
-            "Das Passwort muss mindestens 8 Zeichen lang sein.")  # Gibt einen Fehler aus, wenn die Länge zu kurz ist
-
     # Definiert die Kategorien von Zeichen, die verwendet werden können
     upper = string.ascii_uppercase  # Großbuchstaben (A-Z)
     lower = string.ascii_lowercase  # Kleinbuchstaben (a-z)
@@ -40,11 +35,11 @@ def passwortspeichern():
         passwortliste = {}  # Erstellt ein leeres Dictionary für Anbieter und Passwörter
         anbieter = input("Welchen Anbieter wollen Sie speichern? ").lower()  # Fragt nach dem Anbieter
         laenge = int(input("Wie lang darf das Passwort sein? "))  # Fragt nach der gewünschten Passwortlänge
-        passwort = passwort_generieren(laenge)  # Generiert ein Passwort basierend auf der gewünschten Länge
-        passwortliste[anbieter] = passwort  # Speichert den Anbieter und das Passwort im Dictionary
-        file.write(
-            f"{anbieter}:{passwort}+\n")  # Schreibt Anbieter und Passwort im Format "anbieter:passwort" in die Datei
-        print("\n✔️ Passwort erfolgreich gespeichert!\n")
+        passwort = passwort_generieren(laenge)# Generiert ein Passwort basierend auf der gewünschten Länge
+        verschluesseltes_passwort = master_passwort(passwort, schlüssel, liste_von_zeichen)
+        passwortliste[anbieter] = verschluesseltes_passwort  # Speichert den Anbieter und das Passwort im Dictionary
+        file.write(f"{anbieter}:{verschluesseltes_passwort}"+"\n")
+        print(f"\n✔️ Passwort \n{passwort}\n erfolgreich gespeichert!\n")
         return passwortliste  # Gibt die Passwortliste zurück
 
 
@@ -57,17 +52,23 @@ def passwoerter_anzeigen():
     with open("pwd.txt", "r") as file:  # Öffnet die Datei "pwd.txt" im Lesemodus
         for line in file:  # Iteriert durch jede Zeile in der Datei
             elemente = line.strip().split(":")  # Teilt die Zeile in Anbieter und Passwort anhand des Doppelpunkts
-            passwortliste3[elemente[0]] = elemente[
-                1]  # Speichert den Anbieter und das verschlüsselte Passwort im Dictionary
-
+            passwortliste3[elemente[0]] = elemente[1]
         if eingabe_anbieter in passwortliste3:  # Prüft, ob der eingegebene Anbieter in der Passwortliste vorhanden ist
             wert = passwortliste3[eingabe_anbieter]  # Holt das Passwort für den Anbieter
             print(
-                f"\n🔓 Passwort für {eingabe_anbieter}: {entschluesseln(wert, schlüssel, liste_von_zeichen)}\n")  # Entschlüsselt das Passwort und gibt es aus
+                f"\n🔓 Passwort für {eingabe_anbieter}: {entschluesseln(wert, schlüssel, liste_von_zeichen)} \n")  # Entschlüsselt das Passwort und gibt es aus
         elif eingabe_anbieter == "alle":
-            with open("pwd.txt", "r") as alle:
-                werte = alle.read()
-                print(werte)
+            try:
+                with open("pwd.txt", "r") as alle:
+                    passwortliste_4 = {}
+                    werte = alle.read()
+                    for alle_werte in werte.strip().split("\n"):
+                        sauber = alle_werte.split(":")
+                        sauber_entschluesselt = entschluesseln(sauber[1], schlüssel, liste_von_zeichen)
+                        passwortliste_4[sauber[0]] = sauber_entschluesselt
+                    print(passwortliste_4)
+            except:
+                print("\nDu hast keine Passwörter gespeichert")
         else:  # Falls der Anbieter nicht gefunden wurde
             print("\n❌ Ein solches Passwort liegt nicht vor.\n")  # Gibt eine Fehlermeldung aus
 
@@ -178,7 +179,6 @@ def benutzeroberflaeche():
 
                         # Hauptprogramm
 
-
 liste_von_zeichen = list(string.ascii_letters + string.digits + string.punctuation + " ")
 schlüssel = int(verschlüsselung_definieren())
 
@@ -209,3 +209,4 @@ if __name__ == "__main__":
                 break
             case _:
                 print("\n❌ Ungültige Auswahl. Bitte eine Zahl zwischen 1 und 4 eingeben.\n")
+
