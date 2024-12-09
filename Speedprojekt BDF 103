@@ -3,13 +3,13 @@ import random  # Importiert die Bibliothek für Zufallsfunktionen
 import string  # Importiert die Bibliothek für Zeichenfunktionen
 
 
-# Funktion zur Passwortgenerierung
+# Funktion zur Passwortgenerierung ChatGPT
 def passwort_generieren(laenge):  # Erstellt ein Passwort mit zufälligen Zeichen basierend auf der angegebenen Länge
     # Definiert die Kategorien von Zeichen, die verwendet werden können
     upper = string.ascii_uppercase  # Großbuchstaben (A-Z)
     lower = string.ascii_lowercase  # Kleinbuchstaben (a-z)
     digits = string.digits  # Ziffern (0-9)
-    special = "!@#$%^&*()_+-=[]{}|;,.<>?/"  # Sonderzeichen
+    special = "!@#$%^&*_+-=[]{}|;,.<>?/"  # Sonderzeichen
 
     # Fügt mindestens ein Zeichen aus jeder Kategorie in die Liste ein
     all_chars = [
@@ -209,4 +209,3 @@ if __name__ == "__main__":
                 break
             case _:
                 print("\n❌ Ungültige Auswahl. Bitte eine Zahl zwischen 1 und 4 eingeben.\n")
-
